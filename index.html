@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<html>
+	<head>
+		<style>
+			h1 {
+				width: 1280px;
+				font-family: Century Gothic;
+				color: #000000;
+				font-size: 48px;
+				margin-bottom: 0.2em;
+			}
+			h2 {
+				width: 1280px;
+				font-family: Century Gothic;
+				color: #000000;
+				font-size: 24px;
+				margin-top: 0em;
+			}
+			
+			#description {
+				font-family: Century Gothic;
+				font-size: 12px;
+				margin-top: 0em;
+			}
+			
+			span, label {
+				font-family: Century Gothic;
+			}
+			.area_count {
+				font-family: Century Gothic;
+				font-size: 12px;
+			}
+			.slider {
+				-webkit-appearance: none;
+				width: 100%;
+				height: 8px;
+				border-radius: 5px;  
+				background: #d3d3d3;
+				outline: none;
+				opacity: 0.7;
+				-webkit-transition: .2s;
+				transition: opacity .2s;
+			}
+			
+			/* Mouse-over effects */
+			.slider:hover {
+			  opacity: 1; /* Fully shown on mouse-over */
+			}
+
+			/* The slider handle (use -webkit- (Chrome, Opera, Safari, Edge) and -moz- (Firefox) to override default look) */
+			.slider::-webkit-slider-thumb {
+				-webkit-appearance: none;
+				appearance: none;
+				width: 16px;
+				height: 16px;
+				border-radius: 50%; 
+				background: #2196F3;
+				cursor: pointer;
+			}
+
+			.slider::-moz-range-thumb {
+				width: 25px;
+				height: 25px;
+				border-radius: 50%;
+				background: #2196F3;
+				cursor: pointer;
+			}
+			
+			.area_checkbox, .overall_checkbox {
+				cursor: pointer;
+			}
+			.area_checkbox input:checked ~ .checkmark {
+				background-color: #2196F3;
+			}
+			
+			#x_title, #y_title, #end {
+				font-family: Century Gothic;
+				font-size: 12px;
+				margin-top: 0em;
+			}
+			#y_title {
+				writing-mode: vertical-lr;
+				transform: rotate(-180deg);
+			}
+			#tooltip {
+				font-family: Century Gothic;
+				font-size: 12px;
+				background: #FFFFFF;
+				border: 1px solid black;
+				border-radius: 5px;
+				padding: 5px;
+			}
+			#loading {
+				font-family: Century Gothic;
+				font-size: 24px;
+			}
+			#end {
+				margin-top: 2em;
+				color: #FFFFFF;
+			}
+		</style>
+	<title>Assignment 3: Data Visualization</title>
+	</head>
+
+	<!-- Load d3.js -->
+	<script src="https://d3js.org/d3.v4.js"></script>
+
+	<body style="text-align:center; padding: 0px 40px" id="body">
+		<div align="left" style="width:1280px">
+			<h1>Assignment 3: Data Visualization</h1>
+			<h2>Li Kainan (1002247)</h2>
+			
+			<span>This data visualization shows the trend of HDB resale price with regard to the remaining lease, in a particular year.</span>
+			<br><br>
+			
+			<div align="left" style="height:32px; width:1280px" id='div1'>
+				<article style="float:left; width:48px;">
+					<span>Year:</span>
+				</article>
+				
+				<article style="float:left; width:600px; margin: 0px 8px;">
+					<form action="/action_page.php">
+						<input type="range" id="range" name="range" min="1990" max="2023" value="2023" class="slider"></input>
+					</form>
+				</article>
+				
+				<article style="float:left; width:48px;">
+					<div align="right" class="range-value" id="rangeV"></div>
+				</article>
+			</div>
+			
+			<div align="left" style="height:180px; width:1280px" id='div2'>
+				<article style="float:left; width:48px;">
+					<span>Area:</span>
+				</article>
+				
+				<article style="float:left; width:1200px; margin: 0px 8px;">
+					<input type="checkbox" id="overall_checkbox" class="overall_checkbox" checked>
+					<label for="vehicle1"> <b>All</b> <span id="All_count" class="area_count">(4967)</span></label><br>
+				
+				<article style="float:left; width:220px; margin: 8px 8px 8px 0px;">
+					<input type="checkbox" id="Ang Mo Kio" value="Ang Mo Kio" class="area_checkbox" checked>
+					<label for="Ang Mo Kio"> Ang Mo Kio <span id="Ang Mo Kio_count" class="area_count">(211)</span></label><br>
+					<input type="checkbox" id="Bedok" value="Bedok" class="area_checkbox" checked>
+					<label for="Bedok"> Bedok <span id="Bedok_count" class="area_count">(267)</span></label><br>
+					<input type="checkbox" id="Bishan" value="Bishan" class="area_checkbox" checked>
+					<label for="Bishan"> Bishan <span id="Bishan_count" class="area_count">(57)</span></label><br>
+					<input type="checkbox" id="Bukit Batok" value="Bukit Batok" class="area_checkbox" checked>
+					<label for="Bukit Batok"> Bukit Batok <span id="Bukit Batok_count" class="area_count">(213)</span></label><br>
+					<input type="checkbox" id="Bukit Merah" value="Bukit Merah" class="area_checkbox" checked>
+					<label for="Bukit Merah"> Bukit Merah <span id="Bukit Merah_count" class="area_count">(178)</span></label><br>
+					<input type="checkbox" id="Bukit Panjang" value="Bukit Panjang" class="area_checkbox" checked>
+					<label for="Bukit Panjang"> Bukit Panjang <span id="Bukit Panjang_count" class="area_count">(147)</span></label><br>
+				</article>
+				<article style="float:left; width:220px; margin: 8px;">
+					<input type="checkbox" id="Bukit Timah" value="Bukit Timah" class="area_checkbox" checked>
+					<label for="Bukit Timah"> Bukit Timah <span id="Bukit Timah_count" class="area_count">(7)</span></label><br>
+					<input type="checkbox" id="Central Area" value="Central Area" class="area_checkbox" checked>
+					<label for="Central Area"> Central Area <span id="Central Area_count" class="area_count">(48)</span></label><br>
+					<input type="checkbox" id="Choa Chu Kang" value="Choa Chu Kang" class="area_checkbox" checked>
+					<label for="Choa Chu Kang"> Choa Chu Kang <span id="Choa Chu Kang_count" class="area_count">(237)</span></label><br>
+					<input type="checkbox" id="Clementi" value="Clementi" class="area_checkbox" checked>
+					<label for="Clementi"> Clementi <span id="Clementi_count" class="area_count">(127)</span></label><br>
+					<input type="checkbox" id="Geylang" value="Geylang" class="area_checkbox" checked>
+					<label for="Geylang"> Geylang <span id="Geylang_count" class="area_count">(133)</span></label><br>
+					<input type="checkbox" id="Hougang" value="Hougang" class="area_checkbox" checked>
+					<label for="Hougang"> Hougang <span id="Hougang_count" class="area_count">(253)</span></label><br>
+				</article>
+				<article style="float:left; width:220px; margin: 8px;">
+					<input type="checkbox" id="Jurong East" value="Jurong East" class="area_checkbox" checked>
+					<label for=" Jurong East"> Jurong East <span id="Jurong East_count" class="area_count">(97)</span></label><br>
+					<input type="checkbox" id="Jurong West" value="Jurong West" class="area_checkbox" checked>
+					<label for="Jurong West"> Jurong West <span id="Jurong West_count" class="area_count">(293)</span></label><br>
+					<input type="checkbox" id="Kallang/Whampoa" value="Kallang/Whampoa" class="area_checkbox" checked>
+					<label for="Kallang/Whampoa"> Kallang/Whampoa <span id="Kallang/Whampoa_count" class="area_count">(166)</span></label><br>
+					<input type="checkbox" id="Lim Chu Kang" value="Lim Chu Kang" class="area_checkbox" checked>
+					<label for="Lim Chu Kang"> Lim Chu Kang <span id="Lim Chu Kang_count" class="area_count">(0)</span></label><br>
+					<input type="checkbox" id="Marine Parade" value="Marine Parade" class="area_checkbox" checked>
+					<label for="Marine Parade"> Marine Parade <span id="Marine Parade_count" class="area_count">(30)</span></label><br>
+					<input type="checkbox" id="Pasir Ris" value="Pasir Ris" class="area_checkbox" checked>
+					<label for="Pasir Ris"> Pasir Ris <span id="Pasir Ris_count" class="area_count">(125)</span></label><br>
+				</article>
+				<article style="float:left; width:220px; margin: 8px;">
+					<input type="checkbox" id="Punggol" value="Punggol" class="area_checkbox" checked>
+					<label for="Punggol"> Punggol <span id="Punggol_count" class="area_count">(408)</span></label><br>
+					<input type="checkbox" id="Queenstown" value="Queenstown" class="area_checkbox" checked>
+					<label for="Queenstown"> Queenstown <span id="Queenstown_count" class="area_count">(115)</span></label><br>
+					<input type="checkbox" id="Sembawang" value="Sembawang" class="area_checkbox" checked>
+					<label for="Sembawang"> Sembawang <span id="Sembawang_count" class="area_count">(173)</span></label><br>
+					<input type="checkbox" id="Sengkang" value="Sengkang" class="area_checkbox" checked>
+					<label for="Sengkang"> Sengkang <span id="Sengkang_count" class="area_count">(316)</span></label><br>
+					<input type="checkbox" id="Serangoon" value="Serangoon" class="area_checkbox" checked>
+					<label for="Serangoon"> Serangoon <span id="Serangoon_count" class="area_count">(72)</span></label><br>
+					<input type="checkbox" id="Tampines" value="Tampines" class="area_checkbox" checked>
+					<label for="Tampines"> Tampines <span id="Tampines_count" class="area_count">(339)</span></label><br>
+				</article>
+				<article style="float:left; width:220px; margin: 8px;">
+					<input type="checkbox" id="Toa Payoh" value="Toa Payoh" class="area_checkbox" checked>
+					<label for="Toa Payoh"> Toa Payoh <span id="Toa Payoh_count" class="area_count">(130)</span></label><br>
+					<input type="checkbox" id="Woodlands" value="Woodlands" class="area_checkbox" checked>
+					<label for="Woodlands"> Woodlands <span id="Woodlands_count" class="area_count">(424)</span></label><br>
+					<input type="checkbox" id="Yishun" value="Yishun" class="area_checkbox" checked>
+					<label for="Yishun"> Yishun <span id="Yishun_count" class="area_count">(401)</span></label><br>
+				</article>
+				
+				</article>
+			</div>
+			<div align="center" style="width: 1280px;" id='div3'>
+				<article style="float:left;height:400px;width:24px;">
+					<p id="y_title" style="height:380px;">PSF (S$)</p>
+				</article>
+				
+				<article style="float:left; width: 1240px;"">
+					<!-- Create a div where the graph will take place -->
+					<div id="boxplot"></div>
+					<p id="x_title">Remaining Lease (years)</p>
+					<p id="x_title"><i>* For remaining lease > 99 years, it refers to the unit(s) sold before the lease commence date.</i></p>
+					<div id="tooltip"  align="left" style="position: absolute; display: none;"></div>
+					<div id="loading"  style="position: absolute; display: block; left: 640px; top: 570px;">Loading...</div>
+					<span id="end">----- END -----</span>
+					<script type="text/javascript" src="lib.js"></script>
+				</article>
+			</div>
+		</div>
+	</body>
+</html>
