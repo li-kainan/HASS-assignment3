@@ -111,7 +111,6 @@ function refresh_count() {
 		}
 		
 		count = filtered_data.length
-		console.log(count)
 		const all_count = document.getElementById('All_count');
 		all_count.innerHTML = `(${count})`
 	})
