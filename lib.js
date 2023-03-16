@@ -276,7 +276,7 @@ function refresh_boxplot() {
 		.attr("onmouseout", "hideTooltip();")
 		.style("fill", "#000000")
 		.style("opacity", "0.1")
+		
+		hideLoading()
 	})
-	
-	hideLoading()
 }
